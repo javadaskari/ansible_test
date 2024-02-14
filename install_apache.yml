@@ -2,10 +2,24 @@
 
 - hosts: all
   become: true
-  tasks:
+  pre_tasks:
 
-  - name: update cache, install apache and tmux package
-    tags: webpack
+  - name: update repo cache (CentOS)
+    tags: always
+    dnf:
+      update_cache: yes
+    changed_when: false
+    when: ansible_distribution == "CentOS"
+
+  - name: update repo cache (Ubuntu"
+    tags: always
+    apt:
+      update_cache: yes
+    changed_when: false
+    when: ansible_distribution == "Ubuntu"
+
+  - name: install apache and tmux package
+    tags: apache, tmux
     package:
       name: 
         - "{{ apache_pack }}"
@@ -20,4 +34,4 @@
       dest: /var/www/html/host1/index.html
       owner: root
       group: root
-      mode: 0644
+      mode: 0644  

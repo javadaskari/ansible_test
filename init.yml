@@ -1,0 +1,41 @@
+---
+
+- hosts: all
+  become: true
+  tasks:
+
+  - name: install updates (CentOS)
+    tags: always
+    dnf:
+      update_only: yes
+      update_cache: yes            
+    when: ansible_distribution == "CentOS"
+
+  - name: install updates (Ubuntu)
+    tags: always
+    apt:
+      upgrade: dist
+      update_cache: yes
+    when: ansible_distribution == "Ubuntu"    
+
+  - name: create simone user
+    tags: always
+    user:
+      name: simone
+      groups: root
+
+  - name: add ssh key for simone
+    tags: always
+    authorized_key:
+      user: simone
+      key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDn+u4KbmJMVrlKd64HAO4RyFVJjIrVa5ks6po4lkSxVMZKT45/otSX5olKBjUAynVwX7SZNHzytzyy5NrFg2Z8XR7JOkSN2NX7Fv97O0uh8QHBATeyXoGl4h2cuZXePawUVzvS85KjBJkVDr0PuhXuY2hK0Js967fpaNxlMsQa7JJrfHmjv72AofPYQbxIcqIdnhQSZZGKvy30uVkuDanJ09a54+SGCiVIibPTi+w2VkAz5sUPlS9l0LkaoUPZNWvKUKrVpiVU7GQlmw3XtqyojD4SJBVIjn51L4di+DDINONuApMZ0SAWMsa1HxGzxELThKCjrUKNL8AkF0ms5fGH1daOjepKZojUJnqLKMB7l4jWYvYTUOx/k5R9pS4O8WWY92h+0HV+fzRKqqDUCoDpnvc1x1o2Q/IBiyarqp7PASCuFJOhdghZTUmTW989SKJE/MGRU2JOKHGobTfRAz2o1gbEwfi0GFlD5HbOnt88+hSWkrdONaa7jQ73xBQy8YE= javad@LAPTOP-KL55MV1T"    
+
+  - name: add sudoers file for simone
+    tags: always
+    copy:
+      src: sudoer_simone
+      dest: /etc/sudoers.d/simone
+      owner: root
+      group: root
+      mode: 0440
+
