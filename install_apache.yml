@@ -4,11 +4,11 @@
   become: true
   tasks:
 
-  - name: update repository index
-    apt:
-      update_cache: yes  
-
-  - name: install apazche2 package
-    apt:
-      name: apache2
+  - name: update cache, install apache and tmux package
+    tags: webpack
+    package:
+      name: 
+        - "{{ apache_pack }}"
+        - "{{ tmux_pack }}"
       state: latest  
+      update_cache: yes
